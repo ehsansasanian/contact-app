@@ -30,6 +30,7 @@ public class ContactServiceImpl implements ContactService {
     private final ContactRepository contactRepository;
     private final GitRepositoriesRepository gitRepositoriesRepository;
     private final HttpClient httpClient;
+    private final HttpRequest.Builder httpRequest;
 
     @Override
     public ResponseEntity<List<Contact>> searchByDetail(ReqContactDTO entity) {
@@ -46,7 +47,7 @@ public class ContactServiceImpl implements ContactService {
         resSaveContactDTO.setContact(contact);
 
         String uri = "https://api.github.com/users/" + entity.getGitHub() + "/repos";
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri)).build();
+        HttpRequest request = httpRequest.uri(URI.create(uri)).build();
 
         httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
